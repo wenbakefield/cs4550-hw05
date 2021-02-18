@@ -1,13 +1,22 @@
 #!/bin/bash
 
-export SECRET_KEY_BASE=W68eso5YQOlbtvSNUR50N/HDWj6IaEhAwMR3LtzuBEQAefwYVbX84bvoTA7XtiGi
 export MIX_ENV=prod
 export PORT=4269
 
+CFGD=$(readlink -f ~/.config/bulls)
+
+if [ ! -e "$CFGD/base" ]; then
+    echo "run deploy first"
+    exit 1
+fi
+
+SECRET_KEY_BASE=$(cat "$CFGD/base")
+export SECRET_KEY_BASE
+
 echo "Stopping old copy of app, if any..."
 
-_build/prod/rel/hw05/bin/hw05 stop || true
+_build/prod/rel/bulls/bin/bulls stop || true
 
 echo "Starting app..."
 
-_build/prod/rel/hw05/bin/hw05 start
+_build/prod/rel/bulls/bin/bulls start
