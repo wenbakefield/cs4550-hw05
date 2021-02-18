@@ -1,14 +1,12 @@
 #!/bin/bash
 
-export SECRET_KEY_BASE=insecure
 export MIX_ENV=prod
 export PORT=4269
-export NODEBIN=`pwd`/assets/node_modules/.bin
-export PATH="$PATH:$NODEBIN"
+export SECRET_KEY_BASE=insecure
 
 echo "Building..."
 
-mix deps.get
+mix deps.get --only prod
 mix compile
 
 # Taken from CS4550 lecture notes
@@ -27,15 +25,15 @@ fi
 SECRET_KEY_BASE=$(cat "$CFGD/base")
 export SECRET_KEY_BASE
 
-(cd assets && npm install)
-(cd assets && webpack --mode production)
+npm install --prefix ./assets
+npm run deploy --prefix ./assets
 mix phx.digest
 
 echo "Generating release..."
 mix release
 
 #echo "Stopping old copy of app, if any..."
-#_build/prod/rel/practice/bin/practice stop || true
+#_build/prod/rel/bulls/bin/bulls stop || true
 
 echo "Starting app..."
 
