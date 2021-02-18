@@ -7,6 +7,9 @@
 # General application configuration
 use Mix.Config
 
+config :bulls,
+  namespace: Bulls
+
 # Configures the endpoint
 config :bulls, BullsWeb.Endpoint,
   url: [host: "localhost"],
