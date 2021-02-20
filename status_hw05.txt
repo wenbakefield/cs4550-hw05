@@ -1,0 +1,40 @@
+Please fill in answers to the questions below:
+
+
+1. What's your name?
+Ben Wakefield
+
+
+2. What hostname did you deploy to?
+hw05.wenbakefield.com
+
+
+3. Which parts of this assignment did you have trouble with, if any?
+I had trouble converting my JavaScript code for the game logic
+to Elixir, but I was able to use my Fundies 1 notes and HexDocs
+on anonymous and higher-order functions in order to get proper
+results.
+
+
+4. What part of your application state is on the server?
+All state and game logic is handled on the server.
+
+
+5. What part of your application state, if any, is in the browser?
+The input for each guess is handled in the browser.
+The browser also receives past guesses and whether or not the user
+has won or lost. The input box and submit button are locked by the
+browser, but it is also handled in the server, and the player will
+receive a warning message if they try to edit the HTML to make
+more guesses.
+
+
+And here's a list of tasks for grading comments. Just leave this here:
+ - Task 1
+ - Task 2
+ - Task 3
+ - Task 4
+ - Task 5
+ - Task 6
+ - Task 7
+ - Task 8
