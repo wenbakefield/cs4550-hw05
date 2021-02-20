@@ -1,31 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { ch_join, ch_push } from './socket';
 
 // Attribution: Based on lecture notes from CS 4550
 // Author: Nat Tuck
 // Link: https://github.com/NatTuck/scratch-2021-01/blob/master/notes-4550/04-react-intro/notes.md
 function Bucks() {
-  const [secret, setSecret] = useState(generateCode());
-  const [guesses, setGuesses] = useState([]);
-  const [guess, setGuess] = useState("");
-  const [gameOver, setGameOver] = useState(false);
+  const [state, setState] = useState({
+    guesses: [],
+    win: false,
+    lose: false,
+    msg: "",
+  });
+  
+  const [guessInput, setGuessInput] = useState("");
+  
+  useEffect(() => {
+    ch_join(setState);
+  });
   
   function updateGuess(ev) {
-    setGuess(ev.target.value);
+    setGuessInput(ev.target.value);
   }
   
   function makeGuess() {
-    if (validateGuess(guess)) {
-      setGuesses(guesses.concat(guess + ": " + numBucks(guess, secret) + " Bucks & " + numDoes(guess, secret) + " Does"));
-      if (guess === secret || guesses.length === 7) {
-        setGameOver(true);
-      }
-      else {
-        setGuess("");
-      }
-    }
-    else {
-      setGuess("");
-    }
+      ch_push("guess", {number: guessInput});
+      setGuessInput("");
+      
   }
   
   function onKeyPress(ev) {
@@ -35,57 +35,7 @@ function Bucks() {
   }
 
   function newGame() {
-    setSecret(generateCode());
-    setGuesses([]);
-    setGuess("");
-    setGameOver(false);
-  }
-  
-  function generateCode() {
-    let code = "";
-    while (code.length < 4) {
-      let num = Math.floor(Math.random() * Math.floor(10));
-      if (code.indexOf(num.toString()) === -1) {
-        code = code + num;
-      }
-    }
-    return code;
-  }
-  
-  function validateGuess(guess) {
-    if (guess.length !== 4) {
-      return false;
-    }
-    let nums = [];
-    for (let ii = 0; ii < 4; ii++) {
-      let digit = parseInt(guess.charAt(ii));
-      if (isNaN(digit) || nums.includes(digit)) {
-        return false;
-      }
-      nums.push(digit);
-    }
-    return true;
-  }
-
-  function numBucks(guess, secret) {
-    let bucks = 0;
-    for (let ii = 0; ii < guess.length; ii++) {
-      if (guess.charAt(ii) === secret.charAt(ii)) {
-        bucks++;
-      }
-    }
-    return bucks;
-  }
-  
-  function numDoes(guess, secret) {
-    let does = 0;
-    for (let ii = 0; ii < guess.length; ii++) {
-      let digit = guess.charAt(ii);
-      if (secret.indexOf(digit) !== ii && secret.indexOf(digit) !== -1) {
-        does++;
-      }
-    }
-    return does;
+    ch_push("new", "");
   }
 
   return (
@@ -101,24 +51,46 @@ function Bucks() {
       <p>
         The secret code is four digits.<br/>
         Each digit in the code is unique (0-9).<br/>
+        You cannot try the same guess twice.<br/>
         You only have eight attempts.
       </p>
-      <h2>The Code: {gameOver ? secret : "_ _ _ _"}</h2>
-      <h2>{gameOver ? (guess === secret ? "You win!" : "You lose!") : ""}</h2>
+      <h2>Guess The Code:</h2>
+      <p class="alert alert-warning" role="alert">{state.msg}</p>
+      <p class="alert alert-success" role="alert">{state.win ? "You Win!" : ""}</p>
+      <p class="alert alert-danger" role="alert">{state.lose ? "You Lose..." : ""}</p>
       <label>
         <input
           type="text"
-          value={guess}
+          value={guessInput}
           onChange={updateGuess}
           onKeyPress={onKeyPress}
-          disabled={gameOver ? "disabled" : ""}
+          maxlength="4"
+          disabled={(state.lose || state.win) ? "disabled" : ""}
         />
-        <button onClick={makeGuess} disabled={gameOver ? "disabled" : ""}>Try It!</button>
+        <button onClick={makeGuess} disabled={(state.lose || state.win) ? "disabled" : ""}>Try It!</button>
         <button onClick={newGame}>New Game</button>
       </label>
-      <h2>Attempts ({8 - guesses.length} left):</h2>
-      <div>{guesses.map((guess, key) => (<div key={key}>{guess}</div>))}</div>
-      <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      <h2>Previous Attempts:</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Attempt</th>
+            <th>Guess</th>
+            <th>Bucks</th>
+            <th>Does</th>
+          </tr>
+        </thead>
+        <tbody>
+          {state.guesses.map((guess, index) => 
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{guess.guess}</td>
+              <td>{`${guess.bucks}`}</td>
+              <td>{`${guess.does}`}</td>
+            </tr>)
+          }
+        </tbody>
+      </table>
     </div>
   );
 }

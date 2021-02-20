@@ -3,14 +3,29 @@
 
 body {
   background-color: #1E1E1E;
-  color: antiquewhite;
+  color: white;
   font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 input, select, textarea {
-  color: antiquewhite;
+  color: white;
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+table, td {
+  color: white;
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+th {
+  color: white;
+  font-weight: bold;
   font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -22,21 +37,30 @@ input, select, textarea {
   margin-bottom: 20px;
   border: 1px solid transparent;
   border-radius: 4px;
+  font-weight: bold;
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .alert-info {
-  color: #31708f;
-  background-color: #d9edf7;
-  border-color: #bce8f1;
+  color: white;
+  background-color: darkslateblue;
+  border-color: white;
 }
 .alert-warning {
-  color: #8a6d3b;
-  background-color: #fcf8e3;
-  border-color: #faebcc;
+  color: white;
+  background-color: firebrick;
+  border-color: white;
 }
 .alert-danger {
-  color: #a94442;
-  background-color: #f2dede;
-  border-color: #ebccd1;
+  color: white;
+  background-color: firebrick;
+  border-color: white;
+}
+.alert-success {
+  color: white;
+  background-color: darkgreen;
+  border-color: white;
 }
 .alert p {
   margin-bottom: 0;
